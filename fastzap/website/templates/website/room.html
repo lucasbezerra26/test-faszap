@@ -9,8 +9,20 @@
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
+    <button type="button" onclick="botTogger()" id="button"> Desabilitar bot</button>
     {{ attendance|json_script:"attendance" }}
     <script>
+        let bot=true
+
+        function botTogger(){
+            if (bot == true){
+                bot = false
+                document.getElementById("button").innerText =  "Habilitar bot"
+            }else{
+                bot = true
+                document.getElementById("button").innerText =  "Desabilitar bot"
+            }
+        }
         const roomName = JSON.parse(document.getElementById('attendance').textContent);
         function apiMessage(){
             return fetch(`http://127.0.0.1:8000/api/v1/chat/message/${roomName}/`)
@@ -25,6 +37,9 @@
 
                     document.querySelector('#chat-log').value += `(${element.text} + ${element.type})\n`;
                 })
+                document.querySelector('#chat-log').value += "Conversando com o bot \n";
+                document.querySelector('#chat-log').value += "Digite menu e veja o que acontece \n";
+
             })
 
 
@@ -55,9 +70,11 @@
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
+
             chatSocket.send(JSON.stringify({
                 'message': message,
-                'type_message': "enviado"
+                'type_message': "enviado",
+                'bot': bot
             }));
             messageInputDom.value = '';
         };

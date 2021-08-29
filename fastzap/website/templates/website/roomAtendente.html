@@ -18,11 +18,7 @@
         }
 
         apiMessage().then((data) => {
-                {#let data_array = data.json()#}
-                console.log(data)
                 data.forEach((element, index, array)=>{
-                    console.log(element)
-
                     document.querySelector('#chat-log').value += `(${element.text} + ${element.type})\n`;
                 })
             })
@@ -57,7 +53,8 @@
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'message': message,
-                'type_message': "recebido"
+                'type_message': "recebido",
+                'bot': "false"
             }));
             messageInputDom.value = '';
         };
